@@ -36,8 +36,8 @@ import cv2
 import numpy as np
 
 
-DATASET_DIR = Path("/mnt/disks/work/lokesh/seg/datasets/cracks.v1i.coco")
-VIZ_DIR = Path("/mnt/disks/work/lokesh/seg/processed_data/verification/cracks_duplicates")
+DATASET_DIR = Path("datasets/cracks.v1i.coco")
+VIZ_DIR = Path("processed_data/verification/cracks_duplicates")
 
 # Max groups to visualize (groups sorted by size descending)
 VIZ_MAX_GROUPS = 50

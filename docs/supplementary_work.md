@@ -70,10 +70,10 @@ All OpenCV-based viewers are **headless-safe** — they check `$DISPLAY`/`$WAYLA
 
 ```bash
 # Dataset grid export
-uv run python src/visualization/visualize_dataset.py --dataset cracks --split train --n 20
+uv run python src/visualization/visualize_dataset.py cracks --split train --n 20
 
 # Post-augmentation visualization
-uv run python src/visualization/visualize_dataloader.py --config src/configs/experiment.yaml --n 16
+uv run python src/visualization/visualize_dataloader.py --split train --n 16
 
 # Failure analysis (headless-safe)
 uv run python src/visualization/visualize_failures.py \
@@ -131,28 +131,39 @@ COCO JSON → preprocess.py → per-dataset pickles → merge_datasets.py → me
 |--------|---------|
 | `preprocess.py` | COCO JSON → pickle with binary masks ({0,255}), supports both datasets via CLI arg |
 | `merge_datasets.py` | Merges drywall + cracks pickles, exports PNG masks for verification |
-| `dedup_drywall_v2.py` | Annotation-first drywall deduplication (polygon similarity) |
+| `dedup_drywall_v2.py` | Annotation-first drywall deduplication (bbox matching + SSIM) |
 | `dedup_cracks.py` | Base-name + Union-Find cracks deduplication |
-| `mask_quality_checks.py` | Consolidated QA: 14 checks + annotation cleaning |
+| `mask_quality_checks.py` | Consolidated QA: 19 checks + annotation cleaning |
 | `verify_dedup_cracks.py` | 7-check post-dedup verification |
 
-### 14-Point QA Checks
+### 19-Point QA Checks
 
 The consolidated `mask_quality_checks.py` performs:
-1. Tiny annotations (<0.5% image coverage)
-2. Mask bleed outside bounding box (>1% overflow)
-3. Disconnected components in single annotations
-4. Degenerate polygons (self-intersecting, <3 points)
-5. All-zero masks (empty annotations)
-6. All-white masks (full-coverage annotations)
-7. Annotation count per image
-8. Category ID consistency
-9. Image dimension validation
-10. Polygon coordinate bounds
-11. Duplicate annotation detection
-12. Missing image references
-13. Missing annotation references
-14. Format consistency (COCO JSON schema)
+
+**Image-level:**
+1. File integrity (corrupted, missing, extra)
+2. Wrong image mode (non-RGB)
+3. Image-annotation size mismatch
+4. Resolution stats
+
+**Annotation-level:**
+5. Empty masks
+6. Annotations without matching images (orphans)
+7. Missing classes
+8. Unused categories
+9. Category distribution
+10. Annotation bleed
+11. Tiny annotations
+12. Disconnected components
+13. Incorrect label IDs
+14. Degenerate polygons
+15. Multi-polygon annotations
+16. Crowd annotations
+17. Bbox area vs annotation area mismatch
+18. Annotation distribution
+
+**Cross-level:**
+19. Corrupted directory check
 
 ### Train-Only Cleaning Principle
 

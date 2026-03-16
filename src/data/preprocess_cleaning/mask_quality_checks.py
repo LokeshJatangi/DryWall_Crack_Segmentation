@@ -47,7 +47,7 @@ from PIL import Image
 
 Image.MAX_IMAGE_PIXELS = None
 
-BASE_DIR = Path("/mnt/disks/work/lokesh/seg")
+BASE_DIR = Path(".")
 
 DATASETS = {
     "drywall": {

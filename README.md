@@ -19,7 +19,7 @@ A single model accepts an image + text prompt and produces a binary mask for:
 | 3 | SegFormer B2 / MiT-B2 | Dice+BCE | 0.7939 | 0.6812 | 0.8087 | 0.8350 | 27.7M |
 | 4 | U-Net / ResNet-34 | Dice+Focal | 0.7760 | 0.6594 | 0.7749 | 0.8352 | 24.8M |
 | 5 | U-Net++ / ResNet-34 | Dice+Focal | 0.7755 | 0.6563 | 0.7815 | 0.8304 | 26.4M |
-| 6 | **SegFormer B2 / MiT-B2** | **Dice+Focal** | **0.8041** | **0.6921** | **0.8090** | **0.8522** | **27.7M** |
+| 6 | **SegFormer B2 / MiT-B2** | **Dice+Focal** | **0.8041** | **0.6921** | **0.8092** | **0.8523** | **27.7M** |
 
 All models use FiLM (Feature-wise Linear Modulation) for prompt conditioning. See [docs/final_report.md](docs/final_report.md) for full analysis.
 
@@ -40,7 +40,7 @@ Top predictions per prompt (4-panel: Input | Pred overlay | GT overlay | Combine
 
 ### Failure Cases
 
-Top 10 worst predictions (sorted by IoU). 46 of the 50 worst are cracks — no consistent over/under-segmentation pattern; errors are driven by GT annotation noise. Full top-50 grids in the [report](docs/final_report.md).
+Top 50 worst predictions (sorted by IoU) were analyzed. 46 of the 50 worst are cracks — no consistent over/under-segmentation pattern; errors are driven by GT annotation noise. Full top-50 grids (5 pages of 10) in the [report](docs/final_report.md).
 
 ![Failure Cases](assets/report/failures_1.png)
 
@@ -91,7 +91,7 @@ uv run python src/visualization/visualize_interactive.py processed_data/merged/v
 | Cracks | 907 (dedup from 5,164) | 201 | 4 | "segment crack" |
 | **Merged** | **1,388** | **403** | **4** | both |
 
-All images 640x640, masks binary {0, 255}, COCO-format annotations. License: CC BY 4.0.
+All images 640x640, masks binary {0, 255}, COCO-format annotations
 
 ## Project Structure
 
@@ -107,7 +107,7 @@ src/
 │   ├── smp_models.py                  # SMP factory (U-Net, U-Net++, DeepLabV3+)
 │   └── segformer.py                   # SegFormer B2 with FiLM
 ├── training/
-│   ├── trainer.py                     # Training loop: AMP, early stopping, TensorBoard
+│   ├── trainer.py                     # Training loop
 │   ├── losses.py                      # Dice, DiceBCE, Focal, Boundary, Combined
 │   └── metrics.py                     # mIoU, Dice, Precision, Recall tracker
 ├── evaluation/
@@ -123,7 +123,8 @@ src/
     ├── visualize_interactive.py       # Interactive OpenCV viewer
     ├── visualize_failures.py          # Failure analysis: inference + metrics + browser
     ├── verify_drywall.py              # 4-panel bbox→mask verification
-    └── visualize_tiny_annotations.py  # QA viz: tiny/bleed/disconnected modes
+    ├── visualize_tiny_annotations.py  # QA viz: tiny/bleed/disconnected modes
+    └── visualize_crack_aug.py        # CrackWidthAugmentation visualization
 main.py                                # Training entry point
 experiments/                           # Saved runs (ckpts, logs, predictions)
 processed_data/                        # Preprocessed pickle files + PNG masks
@@ -150,7 +151,3 @@ docs/                                  # Final report, progress log, setup guide
 - Seed: 24 (set for Python, NumPy, PyTorch, CUDA, DataLoader workers)
 - All configs: `src/configs/*.yaml`
 - Checkpoints save full `ExperimentConfig` for architecture reconstruction
-
-## License
-
-Datasets: CC BY 4.0

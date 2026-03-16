@@ -31,7 +31,7 @@ def get_screen_size():
         screen_height = root.winfo_screenheight()
         root.destroy()
         return screen_width, screen_height
-    except:
+    except Exception:
         # Fallback to common resolution
         return 1920, 1080
 
@@ -280,8 +280,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--scale",
         type=float,
-        default=1.0,
-        help="Display scale factor (default: auto-calculate for 70%% screen)"
+        default=None,
+        help="Display scale factor (default: auto-calculate for 70% screen)"
     )
     parser.add_argument(
         "--delay",

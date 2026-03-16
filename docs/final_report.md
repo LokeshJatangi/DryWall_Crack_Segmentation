@@ -23,13 +23,14 @@ Two prompts are supported:
 **Known issues:**
 - 2 drywall train images have no annotations (included as negative samples)
 - 2 potential train/valid leakage pairs identified in drywall dataset (not removed — borderline cases with different crops)
+- Cracks dataset: 1 cross-split leakage between train/valid (base name `525_jpg`) and 1 between train/test (base name `2056_jpg`) — not removed, borderline cases with different augmentation crops from Roboflow
 
 ## 3. Data Cleaning
 
 All cleaning operations were applied to **train splits only** — validation and test splits were never modified.
 
 **Deduplication:**
-- **Drywall:** Annotation-first dedup using polygon similarity → 339 duplicates removed (820 → 481)
+- **Drywall:** Annotation-first dedup using bbox matching + SSIM verification → 339 duplicates removed (820 → 481)
 - **Cracks:** Base-name + Union-Find grouping to identify Roboflow augmentation variants → 4,257 augmented copies removed (5,164 → 907)
 
 **Quality Assurance:**
@@ -115,9 +116,9 @@ The **auxiliary injection** adds a separate projection of the prompt embedding d
 |-------|-----------|---------|------------|
 | U-Net | SMP | ResNet-34 (ImageNet) | 24,766,865 |
 | U-Net++ | SMP | ResNet-34 (ImageNet) | 26,409,105 |
-| SegFormer B2 | HuggingFace | MiT-B2 (ImageNet-1k) | 27,677,889 |
+| SegFormer B2 | HuggingFace | MiT-B2 (ADE20K finetuned) | 27,677,889 |
 
-All architectures are wrapped with `FiLMConditionedModel` (or equivalent SegFormer integration) for prompt conditioning. Encoders are initialized from ImageNet pretrained weights.
+SegFormer is initialized from ADE20K-finetuned weights (`nvidia/segformer-b2-finetuned-ade-512-512`); SMP models use ImageNet pretrained encoders. All architectures are wrapped with `FiLMConditionedModel` (or equivalent SegFormer integration) for prompt conditioning.
 
 ### 4.3 Augmentation
 
@@ -126,17 +127,14 @@ All experiments use the `full` augmentation tier:
 | Transform | Parameters |
 |-----------|------------|
 | HorizontalFlip | p=0.5 |
-| VerticalFlip | p=0.5 |
-| RandomRotate90 | p=0.5 |
-| ShiftScaleRotate | shift=0.1, scale=0.15, rotate=30, p=0.6 |
-| ElasticTransform | alpha=80, sigma=10, p=0.3 |
-| GridDistortion | p=0.3 |
+| VerticalFlip | p=0.25 |
+| Rotate | limit=30, p=0.5 |
+| ShiftScaleRotate | shift=0.1, scale=0.15, rotate_limit=0, p=0.5 |
 | RandomBrightnessContrast | brightness=0.2, contrast=0.2, p=0.5 |
-| HueSaturationValue | hue=15, sat=20, val=15, p=0.3 |
-| GaussNoise | var_limit=(5,25), p=0.3 |
-| GaussianBlur | blur_limit=5, p=0.2 |
-| CLAHE | clip_limit=3.0, p=0.3 |
-| CoarseDropout | max_holes=6, max_height=40, max_width=40, p=0.3 |
+| CLAHE | clip_limit=4.0, p=0.3 |
+| GaussNoise | p=0.2 |
+| HueSaturationValue | p=0.3 |
+| Sharpen | alpha=(0.2, 0.5), lightness=(0.5, 1.0), p=0.3 |
 | ImageNet Normalize | mean=[0.485,0.456,0.406], std=[0.229,0.224,0.225] |
 
 ## 5. Training Setup
@@ -150,7 +148,6 @@ All experiments use the `full` augmentation tier:
 | Epochs | 50 |
 | Early stopping | patience=10 (on val Dice) |
 | Seed | 24 |
-| Mixed precision | AMP (fp16) |
 
 **Learning rates:**
 - U-Net / U-Net++: 1e-4
@@ -176,12 +173,14 @@ All experiments use the `full` augmentation tier:
 | 3 | SegFormer B2 | Dice+BCE | 0.7939 | 0.6812 | 0.8087 | 0.8350 |
 | 4 | U-Net | Dice+Focal | 0.7760 | 0.6594 | 0.7749 | 0.8352 |
 | 5 | U-Net++ | Dice+Focal | 0.7755 | 0.6563 | 0.7815 | 0.8304 |
-| 6 | **SegFormer B2** | **Dice+Focal** | **0.8041** | **0.6921** | **0.8090** | **0.8522** |
+| 6 | **SegFormer B2** | **Dice+Focal** | **0.8041** | **0.6921** | **0.8092** | **0.8523** |
 
 **Observations:**
 - SegFormer B2 outperforms both CNN architectures across all metrics
 - Dice+Focal provides a consistent improvement over Dice+BCE for all architectures (+0.5-1.1pp Dice)
 - Focal loss improves recall (+1-3pp) with minimal precision trade-off, consistent with its design for hard example mining
+
+**Note on checkpoint selection:** During training, validation Dice was tracked with micro-averaged F1 for dice+BCE experiments. The final evaluation recomputes all metrics with macro-averaged F1, which yields lower Dice values. The checkpoint was selected based on the training metric; all reported numbers above are from the standardized evaluator.
 
 ### 6.2 Per-Prompt Metrics
 
@@ -202,7 +201,7 @@ There is a consistent ~18-20pp IoU gap between taping and crack segmentation acr
 |-------|------------|------------|-------------------|---------------|
 | U-Net (ResNet-34) | 24,766,865 | 284 MB | 17.84 | 8,142 |
 | U-Net++ (ResNet-34) | 26,409,105 | 303 MB | 34.11 | 5,895 |
-| SegFormer B2 (MiT-B2) | 27,677,889 | 318 MB | 56.77 | 6,086 |
+| SegFormer B2 (MiT-B2) | 27,677,889 | 318 MB | 55.94 | 6,086 |
 
 U-Net has the fastest inference (17.84 ms) but highest GPU memory peak. SegFormer is slowest at inference but achieves the best accuracy. U-Net++ offers a middle ground.
 
@@ -288,9 +287,10 @@ Detailed per-class metrics and runtime reports for each experiment are in `repor
 
 Based on the failure analysis and feature channel evaluation, the following directions are planned:
 
-- **Higher resolution input** — Training at 640x640 may lose fine crack detail; experimenting with larger input sizes  could improve thin-crack segmentation
+- **Higher resolution input** — Training at 640x640 may lose fine crack detail; experimenting with larger input sizes could improve thin-crack segmentation
 - **Classical CV features as additional input channels** — Multiscale LoG and Gabor filters showed moderate discriminative power for cracks (FLD 1.47 and 0.97). Concatenating these as extra input channels alongside RGB could improve crack detection without adding learnable parameters
 - **Boundary loss and crack width augmentation** — Dice+Focal+Boundary loss with CrackWidthAugmentation to address thin-crack under-segmentation (see [Additional Experiments](additional_experiments.md))
+- Explore Classical CV post processing techniques.
 
 ## 9. Supplementary Work
 

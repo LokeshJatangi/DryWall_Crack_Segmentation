@@ -95,16 +95,7 @@ class Trainer:
         self.best_dice = 0.0
         self.patience_counter = 0
 
-        # Resume from checkpoint
         self.start_epoch = 1
-        if config.training.resume_from:
-            ckpt = torch.load(config.training.resume_from, map_location=self.device, weights_only=False)
-            self.model.load_state_dict(ckpt['model_state_dict'])
-            self.best_dice = ckpt['metrics'].get('dice', 0.0)
-            resumed_epoch = ckpt.get('epoch', 0)
-            self.start_epoch = resumed_epoch + 1
-            print(f"Resumed from: {config.training.resume_from}")
-            print(f"  Checkpoint epoch: {resumed_epoch}, best dice: {self.best_dice:.4f}")
 
         # Print model info
         total_params = sum(p.numel() for p in self.model.parameters())

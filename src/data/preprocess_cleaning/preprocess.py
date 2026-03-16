@@ -198,8 +198,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.dataset == "cracks":
-        DATASET_DIR = "/mnt/disks/work/lokesh/seg/datasets/cracks.v1i.coco"
-        OUTPUT_DIR  = "/mnt/disks/work/lokesh/seg/processed_data"
+        DATASET_DIR = "datasets/cracks.v1i.coco"
+        OUTPUT_DIR  = "processed_data"
         DATASET_NAME = "cracks"
         PROMPT = "segment crack"
         USE_SEGMENTATION = True
@@ -209,8 +209,8 @@ if __name__ == "__main__":
         print("CRACKS DATASET PREPROCESSING")
         print("="*50)
     else:
-        DATASET_DIR = "/mnt/disks/work/lokesh/seg/datasets/Drywall-Join-Detect.v2i.coco"
-        OUTPUT_DIR  = "/mnt/disks/work/lokesh/seg/processed_data"
+        DATASET_DIR = "datasets/Drywall-Join-Detect.v2i.coco"
+        OUTPUT_DIR  = "processed_data"
         DATASET_NAME = "drywall"
         PROMPT = "segment taping area"
         USE_SEGMENTATION = False

@@ -30,8 +30,8 @@ import numpy as np
 from skimage.metrics import structural_similarity as ssim
 
 
-DATASET_DIR = Path("/mnt/disks/work/lokesh/seg/datasets/cracks.v1i.coco")
-REPORTS_DIR = Path("/mnt/disks/work/lokesh/seg/reports")
+DATASET_DIR = Path("datasets/cracks.v1i.coco")
+REPORTS_DIR = Path("reports")
 
 
 # ---------------------------------------------------------------------------

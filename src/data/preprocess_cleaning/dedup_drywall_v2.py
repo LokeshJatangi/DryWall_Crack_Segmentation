@@ -23,8 +23,8 @@ import cv2
 from skimage.metrics import structural_similarity as ssim
 
 
-DATASET_DIR = Path("/mnt/disks/work/lokesh/seg/datasets/Drywall-Join-Detect.v2i.coco")
-VIZ_DIR = Path("/mnt/disks/work/lokesh/seg/processed_data/verification/drywall_duplicates")
+DATASET_DIR = Path("datasets/Drywall-Join-Detect.v2i.coco")
+VIZ_DIR = Path("processed_data/verification/drywall_duplicates")
 
 # Bbox-confirmed pairs: even low SSIM means same scene with diff augmentation
 SSIM_THRESHOLD_BBOX_MATCH = 0.70

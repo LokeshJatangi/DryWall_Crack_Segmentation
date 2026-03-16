@@ -115,7 +115,7 @@ def process_split(
 
 
 if __name__ == "__main__":
-    BASE_DIR = Path("/mnt/disks/work/lokesh/seg")
+    BASE_DIR = Path(".")
     PROCESSED_DIR = BASE_DIR / "processed_data"
     OUTPUT_DIR = PROCESSED_DIR / "merged"
 
