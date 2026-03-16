@@ -1,0 +1,35 @@
+data:
+  train_pkl: processed_data/merged/train/merged_train.pkl
+  val_pkl: processed_data/merged/valid/merged_valid.pkl
+  batch_size: 8
+  num_workers: 4
+  augmentation_tier: 'full'
+  crack_aug_enabled: true
+  crack_aug_kernel_min: 2
+  crack_aug_kernel_max: 7
+  crack_aug_prob: 0.6
+  crack_aug_dilate_only: false
+
+model:
+  arch: 'SegFormer'
+  encoder: 'segformer-b2'
+  num_prompts: 2
+  embed_dim: 128
+
+training:
+  epochs: 50
+  lr: 6.0e-5
+  weight_decay: 1.0e-4
+  scheduler: 'cosine'
+  early_stopping_patience: 10
+  seed: 24
+
+loss:
+  type: 'dice_focal'
+  dice_weight: 0.5
+  bce_weight: 0.5
+  focal_alpha: 0.75
+  focal_gamma: 2.0
+
+output:
+  exp_name: 'segformer_b2_crack_aug'

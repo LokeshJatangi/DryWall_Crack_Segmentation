@@ -1,0 +1,64 @@
+
+Checkpoint: experiments/unet_resnet34_baseline_20260315_192543/ckpts/best_model.pt
+Config:     src/configs/unet_experiment.yaml
+
+======================================================================
+PER-CLASS METRICS
+======================================================================
+
+  [CRACK] (201 samples)
+    Dice:      0.6988 +/- 0.1641
+    IoU:       0.5584 +/- 0.1716
+    Precision: 0.7180 +/- 0.2046
+    Recall:    0.7660 +/- 0.2192
+
+  [TAPING] (202 samples)
+    Dice:      0.8528 +/- 0.1270
+    IoU:       0.7599 +/- 0.1522
+    Precision: 0.8314 +/- 0.1681
+    Recall:    0.9040 +/- 0.1056
+
+  [OVERALL] (403 samples)
+    Dice:  0.7760 +/- 0.1657
+    IoU:   0.6594 +/- 0.1909
+======================================================================
+
+======================================================================
+RUNTIME & FOOTPRINT
+======================================================================
+  Device:              cuda
+  Checkpoint epoch:    50
+  Checkpoint val dice: 0.775997359148521
+  Total params:        24,766,865
+  Trainable params:    24,766,865
+  Val images:          403
+  Total inference:     7.19s
+  Avg per image:       17.84ms
+  GPU peak memory:     8142.2 MB
+======================================================================
+
+======================================================================
+FAILURE ANALYSIS SUGGESTIONS
+======================================================================
+
+  1. CLASS IMBALANCE: crack is 0.154 Dice behind.
+     -> Try class-weighted loss or oversample crack in training.
+     -> Add crack-specific augmentations (e.g., elastic for cracks).
+
+  2. OVER-SEGMENTATION dominant: model produces false positives.
+     -> Try adding more negative examples or harder negatives.
+     -> Consider CLAHE/edge-aware preprocessing.
+
+  3. TINY MASKS: 20 failures have <2% mask coverage.
+     -> Use CrackWidthAugmentation to dilate thin annotations during training.
+     -> Try Boundary loss or Lovasz loss for fine structures.
+
+  OTHER IDEAS:
+     - Ablate augmentation tiers (baseline -> geometric -> full)
+     - Try different backbones (resnet50, efficientnet-b3)
+     - Experiment with loss functions: Focal, Boundary, Lovasz
+     - Add test-time augmentation (horizontal flip, multi-scale)
+     - Visualize attention maps / grad-CAM on failure cases
+     - Check dataset quality: are GT annotations correct on failures?
+     - Train longer with lower LR (cosine annealing to 1e-6)
+======================================================================

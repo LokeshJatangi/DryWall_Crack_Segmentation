@@ -1,0 +1,63 @@
+Checkpoint: experiments/segformer_b2_film_baseline_20260315_135901/ckpts/best_model.pt
+Config:     src/configs/segformer_experiment.yaml
+
+======================================================================
+PER-CLASS METRICS
+======================================================================
+
+  [CRACK] (201 samples)
+    Dice:      0.7174 +/- 0.1462
+    IoU:       0.5775 +/- 0.1613
+    Precision: 0.7480 +/- 0.1976
+    Recall:    0.7805 +/- 0.2144
+
+  [TAPING] (202 samples)
+    Dice:      0.8699 +/- 0.1181
+    IoU:       0.7843 +/- 0.1419
+    Precision: 0.8689 +/- 0.1323
+    Recall:    0.8892 +/- 0.1276
+
+  [OVERALL] (403 samples)
+    Dice:  0.7939 +/- 0.1532
+    IoU:   0.6812 +/- 0.1838
+======================================================================
+
+======================================================================
+RUNTIME & FOOTPRINT
+======================================================================
+  Device:              cuda
+  Checkpoint epoch:    48
+  Checkpoint val dice: 0.8450605895566959
+  Total params:        27,677,889
+  Trainable params:    27,677,889
+  Val images:          403
+  Total inference:     29.45s
+  Avg per image:       73.07ms
+  GPU peak memory:     6085.6 MB
+======================================================================
+
+======================================================================
+FAILURE ANALYSIS SUGGESTIONS
+======================================================================
+
+  1. CLASS IMBALANCE: crack is 0.153 Dice behind.
+     -> Try class-weighted loss or oversample crack in training.
+     -> Add crack-specific augmentations (e.g., elastic for cracks).
+
+  2. UNDER-SEGMENTATION dominant: model misses foreground.
+     -> Increase recall: lower threshold, use Focal loss, or Boundary loss.
+     -> Check if thin/small objects are being missed (crack width augmentation).
+
+  3. TINY MASKS: 26 failures have <2% mask coverage.
+     -> Use CrackWidthAugmentation to dilate thin annotations during training.
+     -> Try Boundary loss or Lovasz loss for fine structures.
+
+  OTHER IDEAS:
+     - Ablate augmentation tiers (baseline -> geometric -> full)
+     - Try different backbones (resnet50, efficientnet-b3)
+     - Experiment with loss functions: Focal, Boundary, Lovasz
+     - Add test-time augmentation (horizontal flip, multi-scale)
+     - Visualize attention maps / grad-CAM on failure cases
+     - Check dataset quality: are GT annotations correct on failures?
+     - Train longer with lower LR (cosine annealing to 1e-6)
+======================================================================

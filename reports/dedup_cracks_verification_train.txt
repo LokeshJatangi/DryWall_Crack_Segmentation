@@ -1,0 +1,43 @@
+
+================================================================================
+CRACKS DEDUP VERIFICATION  |  split=train
+================================================================================
+
+[PASS] File consistency
+       All 907 images in JSON exist on disk.
+
+[PASS] No leaked duplicates
+       No leaked duplicates — each of 907 base names appears exactly once.
+
+[PASS] Duplicates directory
+       duplicates/ has 4257 files, none of which appear in the COCO JSON.
+
+[PASS] Annotation orphans
+       All 1502 annotations reference valid image IDs.
+
+[FAIL] Split leakage
+       Split leakage detected:
+  train ∩ valid: 1 base names overlap
+  train ∩ test:  1 base names overlap
+
+[PASS] Count summary
+       Images: 907 | Annotations: 1502 | Images without annotations: 0
+
+[PASS] Spot-check SSIM
+       Spot-checked 10 canonical/duplicate pairs.
+  SSIM range: 0.031 – 0.965  (mean=0.667)
+  Note: low SSIM is expected — Roboflow applies photometric augmentation.
+  2003_jpg                                                 SSIM=0.732
+  00004_jpg                                                SSIM=0.965
+  crack317_jpg                                             SSIM=0.920
+  3863_jpg                                                 SSIM=0.031
+  cracking0141_jpg                                         SSIM=0.628
+  a_12_8_png_jpg                                           SSIM=0.637
+  images615_jpg                                            SSIM=0.386
+  crack294_jpg                                             SSIM=0.845
+  cracking335_jpg                                          SSIM=0.599
+  crack349_jpg                                             SSIM=0.925
+
+────────────────────────────────────────────────────────────────────────────────
+OVERALL: SOME CHECKS FAILED
+────────────────────────────────────────────────────────────────────────────────

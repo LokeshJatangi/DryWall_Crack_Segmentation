@@ -1,0 +1,61 @@
+Checkpoint: experiments/unet++_resnet34_baseline_20260315_192504/ckpts/best_model.pt
+Config:     src/configs/experiment.yaml
+
+======================================================================
+PER-CLASS METRICS
+======================================================================
+
+  [CRACK] (201 samples)
+    Dice:      0.7073 +/- 0.1574
+    IoU:       0.5672 +/- 0.1669
+    Precision: 0.7360 +/- 0.1965
+    Recall:    0.7656 +/- 0.2249
+
+  [TAPING] (202 samples)
+    Dice:      0.8433 +/- 0.1256
+    IoU:       0.7449 +/- 0.1489
+    Precision: 0.8267 +/- 0.1717
+    Recall:    0.8949 +/- 0.1128
+
+  [OVERALL] (403 samples)
+    Dice:  0.7755 +/- 0.1578
+    IoU:   0.6563 +/- 0.1814
+======================================================================
+
+======================================================================
+RUNTIME & FOOTPRINT
+======================================================================
+  Device:              cuda
+  Checkpoint epoch:    47
+  Checkpoint val dice: 0.7754633749833351
+  Total params:        26,409,105
+  Trainable params:    26,409,105
+  Val images:          403
+  Total inference:     13.75s
+  Avg per image:       34.11ms
+  GPU peak memory:     5894.8 MB
+======================================================================
+
+======================================================================
+FAILURE ANALYSIS SUGGESTIONS
+======================================================================
+
+  1. CLASS IMBALANCE: crack is 0.136 Dice behind.
+     -> Try class-weighted loss or oversample crack in training.
+     -> Add crack-specific augmentations (e.g., elastic for cracks).
+
+  2. Mixed failure modes (both under- and over-segmentation).
+
+  3. TINY MASKS: 23 failures have <2% mask coverage.
+     -> Use CrackWidthAugmentation to dilate thin annotations during training.
+     -> Try Boundary loss or Lovasz loss for fine structures.
+
+  OTHER IDEAS:
+     - Ablate augmentation tiers (baseline -> geometric -> full)
+     - Try different backbones (resnet50, efficientnet-b3)
+     - Experiment with loss functions: Focal, Boundary, Lovasz
+     - Add test-time augmentation (horizontal flip, multi-scale)
+     - Visualize attention maps / grad-CAM on failure cases
+     - Check dataset quality: are GT annotations correct on failures?
+     - Train longer with lower LR (cosine annealing to 1e-6)
+======================================================================

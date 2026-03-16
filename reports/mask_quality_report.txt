@@ -1,0 +1,339 @@
+================================================================================================
+MASK / ANNOTATION / IMAGE QUALITY REPORT
+Generated: 2026-03-14 21:26:48
+================================================================================================
+
+SUMMARY TABLE
+------------------------------------------------------------------------------------------------------------------------
+Dataset      Split     Images    Anns  SzMis  Empty  MsCls  Bleed   Tiny  Disco  BadID  Degen   Crpt   Orph  Crowd  ArMis
+------------------------------------------------------------------------------------------------------------------------
+drywall      train        481     623      0      2      1      0     11      2      0      0      2      0      0      0
+drywall      valid        202     250      0      0      1      0      3      3      0      0      0      0      0      0
+cracks       train       5164    8133      0      0      1     34     15     24      0      0      0      0      0      0
+cracks       valid        201     372      0      0      1      5      0      1      0      0      0      0      0      0
+------------------------------------------------------------------------------------------------------------------------
+
+Column legend:
+  SzMis = Image-annotation size mismatch
+  Empty = Empty masks (no annotated pixels)
+  MsCls = Missing classes (expected category absent)
+  Bleed = Annotation bleed (extends beyond image boundary)
+  Tiny  = Tiny annotations (area < 100px from JSON area field)
+  Disco = Disconnected components (tiny islands < 100px in generated mask)
+  BadID = Incorrect label IDs (invalid category)
+  Degen = Degenerate polygons (<4 vertices)
+  Crpt  = Corrupted/unloadable images
+  Orph  = Orphan annotations (no matching image)
+  Crowd = Crowd annotations (iscrowd=1)
+  ArMis = Bbox area vs JSON area mismatch
+
+================================================================================================
+DETAILS: DRYWALL / TRAIN
+  Images: 481, Annotations: 623
+  Categories: {0: 'Drywall-Join', 1: 'drywall-join'}
+================================================================================================
+
+  FILE INTEGRITY
+    Missing on disk: 2
+      - 2000x1500_76_resized_jpg.rf.b94a573f443fe31b37cdf661ae450667.jpg
+      - IMG_20220627_111718-jpg_1500x2000_jpg.rf.15a5b4a6f891a298b66e94236520550b.jpg
+    Extra on disk (no annotation): 1
+      - json
+    Corrupted/unloadable: 2
+      - IMG_20220627_111718-jpg_1500x2000_jpg.rf.15a5b4a6f891a298b66e94236520550b.jpg: missing on disk
+      - 2000x1500_76_resized_jpg.rf.b94a573f443fe31b37cdf661ae450667.jpg: missing on disk
+    Non-RGB mode: 0
+
+  RESOLUTION
+    Unique sizes: 1
+      640x640: 481
+    Non-640x640: 0
+
+  CATEGORIES
+    drywall-join: 623 annotations
+    Unused: ['Category 0 (Drywall-Join): defined but unused']
+
+  ANNOTATION DISTRIBUTION
+    Min per image: 0
+    Max per image: 5
+    Avg per image: 1.3
+
+  EMPTY SEGMENTATION FIELDS: 623/623
+
+  Size Mismatch: PASS
+
+  Empty Masks: FAIL (2 issues)
+    - IMG_20220627_111718-jpg_1500x2000_jpg.rf.15a5b4a6f891a298b66e94236520550b.jpg (id=380): no annotations at all
+    - 2000x1500_76_resized_jpg.rf.b94a573f443fe31b37cdf661ae450667.jpg (id=655): no annotations at all
+
+  Missing Classes: FAIL (1 issues)
+    - Category 0 (Drywall-Join) has no annotations
+
+  Annotation Bleed: PASS
+
+  Tiny Annotations (area < 100px): FAIL (11 issues)
+    - Ann 64 (image IMG_20220627_111149-jpg_1500x2000_jpg.rf.57c198fdef78b108aaeafb8447e12c48.jpg): area=0.5, bbox_area=0.5, bbox=[0, 0, 0.5, 1]
+    - Ann 218 (image 2000x1500_66_resized_jpg.rf.7e1fd35b3de92d104969329a0e782f11.jpg): area=1.0, bbox_area=1.0, bbox=[0, 0, 1, 1]
+    - Ann 350 (image 2000x1500_64_resized_jpg.rf.991cfc5504fbf9e725e14fd2f33a806d.jpg): area=0.2, bbox_area=0.2, bbox=[0, 1, 0.5, 0.5]
+    - Ann 351 (image 2000x1500_64_resized_jpg.rf.991cfc5504fbf9e725e14fd2f33a806d.jpg): area=0.2, bbox_area=0.2, bbox=[1, 0, 0.5, 0.5]
+    - Ann 364 (image 2000x1500_64_resized_jpg.rf.ed3466d3c89d6a05f9221f807a68badf.jpg): area=0.2, bbox_area=0.2, bbox=[0, 1, 0.5, 0.5]
+    - Ann 365 (image 2000x1500_64_resized_jpg.rf.ed3466d3c89d6a05f9221f807a68badf.jpg): area=0.2, bbox_area=0.2, bbox=[1, 0, 0.5, 0.5]
+    - Ann 397 (image 2000x1500_67_resized_jpg.rf.f50860ddfbcf143d0783a1c5d8d9b640.jpg): area=0.2, bbox_area=0.2, bbox=[1, 0, 0.5, 0.5]
+    - Ann 592 (image 2000x1500_24_resized_jpg.rf.1c37556a0144e354949aa8f488b443d6.jpg): area=0.5, bbox_area=0.5, bbox=[0, 0, 0.5, 1]
+    - Ann 716 (image 2000x1500_48_resized_jpg.rf.3fafdf12933a0f97805b7465db7c49b0.jpg): area=0.5, bbox_area=0.5, bbox=[1, 0, 0.5, 1]
+    - Ann 797 (image 2000x1500_69_resized_jpg.rf.9b73a77108c815bd967add318b107485.jpg): area=0.2, bbox_area=0.2, bbox=[1, 0, 0.5, 0.5]
+    - Ann 920 (image IMG_20220627_111052-jpg_1500x2000_jpg.rf.b9a449c737de44fbdbffa850f25ff0c7.jpg): area=84.0, bbox_area=84.0, bbox=[31, 5, 12, 7]
+
+  Disconnected Components: FAIL (2 issues)
+    - 2000x1500_66_resized_jpg.rf.7e1fd35b3de92d104969329a0e782f11.jpg (id=157): component 1/2 has only 1px (threshold: 100px)
+    - IMG_20220627_111052-jpg_1500x2000_jpg.rf.b9a449c737de44fbdbffa850f25ff0c7.jpg (id=678): component 2/4 has only 84px (threshold: 100px)
+
+  Incorrect Label IDs: PASS
+
+  Degenerate Polygons: PASS
+
+  Multi-Polygon Annotations: PASS
+
+  Orphan Annotations: PASS
+
+  Crowd Annotations: PASS
+
+  Bbox vs JSON Area Mismatch: PASS
+
+================================================================================================
+DETAILS: DRYWALL / VALID
+  Images: 202, Annotations: 250
+  Categories: {0: 'Drywall-Join', 1: 'drywall-join'}
+================================================================================================
+
+  FILE INTEGRITY
+    Missing on disk: 0
+    Extra on disk (no annotation): 0
+    Corrupted/unloadable: 0
+    Non-RGB mode: 0
+
+  RESOLUTION
+    Unique sizes: 1
+      640x640: 202
+    Non-640x640: 0
+
+  CATEGORIES
+    drywall-join: 250 annotations
+    Unused: ['Category 0 (Drywall-Join): defined but unused']
+
+  ANNOTATION DISTRIBUTION
+    Min per image: 1
+    Max per image: 4
+    Avg per image: 1.24
+
+  EMPTY SEGMENTATION FIELDS: 250/250
+
+  Size Mismatch: PASS
+
+  Empty Masks: PASS
+
+  Missing Classes: FAIL (1 issues)
+    - Category 0 (Drywall-Join) has no annotations
+
+  Annotation Bleed: PASS
+
+  Tiny Annotations (area < 100px): FAIL (3 issues)
+    - Ann 137 (image 2000x1500_66_resized_jpg.rf.6e781cc3a036d6a7875502ab8a5ab30f.jpg): area=1.0, bbox_area=1.0, bbox=[0, 0, 1, 1]
+    - Ann 192 (image IMG_20220627_111052-jpg_1500x2000_jpg.rf.90e7320ea9e177a2db355b973212fcdb.jpg): area=84.0, bbox_area=84.0, bbox=[31, 5, 12, 7]
+    - Ann 210 (image 2000x1500_66_resized_jpg.rf.b699e5baf2db19c55421c67e1168bdd7.jpg): area=1.0, bbox_area=1.0, bbox=[0, 0, 1, 1]
+
+  Disconnected Components: FAIL (3 issues)
+    - 2000x1500_66_resized_jpg.rf.6e781cc3a036d6a7875502ab8a5ab30f.jpg (id=108): component 1/2 has only 1px (threshold: 100px)
+    - IMG_20220627_111052-jpg_1500x2000_jpg.rf.90e7320ea9e177a2db355b973212fcdb.jpg (id=154): component 2/4 has only 84px (threshold: 100px)
+    - 2000x1500_66_resized_jpg.rf.b699e5baf2db19c55421c67e1168bdd7.jpg (id=168): component 1/1 has only 1px (threshold: 100px)
+
+  Incorrect Label IDs: PASS
+
+  Degenerate Polygons: PASS
+
+  Multi-Polygon Annotations: PASS
+
+  Orphan Annotations: PASS
+
+  Crowd Annotations: PASS
+
+  Bbox vs JSON Area Mismatch: PASS
+
+================================================================================================
+DETAILS: CRACKS / TRAIN
+  Images: 5164, Annotations: 8133
+  Categories: {0: 'crack', 1: 'NewCracks - v2 2024-05-18 10-54pm'}
+================================================================================================
+
+  FILE INTEGRITY
+    Missing on disk: 0
+    Extra on disk (no annotation): 0
+    Corrupted/unloadable: 0
+    Non-RGB mode: 0
+
+  RESOLUTION
+    Unique sizes: 1
+      640x640: 5164
+    Non-640x640: 0
+
+  CATEGORIES
+    NewCracks - v2 2024-05-18 10-54pm: 8133 annotations
+    Unused: ['Category 0 (crack): defined but unused']
+
+  ANNOTATION DISTRIBUTION
+    Min per image: 1
+    Max per image: 10
+    Avg per image: 1.57
+
+  EMPTY SEGMENTATION FIELDS: 39/8133
+
+  Size Mismatch: PASS
+
+  Empty Masks: PASS
+
+  Missing Classes: FAIL (1 issues)
+    - Category 0 (crack) has no annotations
+
+  Annotation Bleed: FAIL (34 issues)
+    - Ann 477 (image Cracked-Sheetrock-02-1_jpg.rf.a70a35f5bc940fc242bd765f272659db.jpg): bbox [188,349,453,136] exceeds image 640x640
+    - Ann 487 (image Cracked-Sheetrock-02-1_jpg.rf.dafdf2374eea54388216ee93da755aba.jpg): bbox [349,188,136,453] exceeds image 640x640
+    - Ann 836 (image 1868_jpg.rf.47e55270614cd1a5c20f96db900b6afb.jpg): bbox [383,283,258,64] exceeds image 640x640
+    - Ann 846 (image 1868_jpg.rf.a46901e31e437f056b93ceacb74553e0.jpg): bbox [383,283,258,64] exceeds image 640x640
+    - Ann 1904 (image a_24_0_png_jpg.rf.2b73d3e5b2f8147a72de8963165ca0f7.jpg): bbox [78,115,563,525] exceeds image 640x640
+    - Ann 1910 (image a_24_0_png_jpg.rf.19efe5d9ae2d1cacf3b120ee374c62d4.jpg): bbox [78,115,563,525] exceeds image 640x640
+    - Ann 1948 (image a_24_0_png_jpg.rf.b1ea86e8138764597c805909634f187e.jpg): bbox [0,78,525,563] exceeds image 640x640
+    - Ann 2116 (image Cracks_in_Walls_jpg.rf.d737a8c71ceb8d373729fcc1e6c83f38.jpg): bbox [347,108,107,533] exceeds image 640x640
+    - Ann 2259 (image image04_jpg.rf.b6340d0f23fbd38cdba50e88cca88beb.jpg): bbox [573,103,68,23] exceeds image 640x640
+    - Ann 2262 (image image04_jpg.rf.b6340d0f23fbd38cdba50e88cca88beb.jpg): bbox [0,213,543,428] exceeds image 640x640
+    - Ann 2308 (image image04_jpg.rf.61a0b7e8d58cb00cdccbeae5715e646e.jpg): bbox [573,103,68,23] exceeds image 640x640
+    - Ann 2311 (image image04_jpg.rf.61a0b7e8d58cb00cdccbeae5715e646e.jpg): bbox [0,213,543,428] exceeds image 640x640
+    - Ann 2461 (image image03_jpg.rf.9a09eb36c85ee223eec2b8d39eca04fe.jpg): bbox [195,298,30,343] exceeds image 640x640
+    - Ann 2561 (image image03_jpg.rf.45d49cefcccc19724c6ed956093b3ca4.jpg): bbox [298,416,343,30] exceeds image 640x640
+    - Ann 2671 (image a_6_28_png_jpg.rf.334b0deab4cf0d494f041133b48012fd.jpg): bbox [478,13,163,73] exceeds image 640x640
+    - Ann 2863 (image image09_jpg.rf.cab8b83e8dfc943ff07bbf6c93b456d1.jpg): bbox [503,496,138,33] exceeds image 640x640
+    - Ann 2905 (image image09_jpg.rf.3d2986d65cca0860c28075f6c2fcaf6e.jpg): bbox [496,503,33,138] exceeds image 640x640
+    - Ann 3833 (image 00033_jpg.rf.b273300b07ec33de3e8e956937320df0.jpg): bbox [364,263,133,378] exceeds image 640x640
+    - Ann 3849 (image 00033_jpg.rf.be5d082a2ec47c9b562c443fef10edad.jpg): bbox [263,364,378,133] exceeds image 640x640
+    - Ann 3888 (image 00041_jpg.rf.743099ea5a5b5699ae899c0dd52f57c1.jpg): bbox [341,553,43,88] exceeds image 640x640
+    ... and 14 more
+
+  Tiny Annotations (area < 100px): FAIL (15 issues)
+    - Ann 1519 (image photo_6186122103615503273_y_jpg.rf.aed194e525253a1ba6265f526ccffece.jpg): area=33.0, bbox_area=33.0, bbox=[354, 224, 3, 11]
+    - Ann 1533 (image photo_6186122103615503273_y_jpg.rf.2b7a49576ec5f1c83b3a190ac1f49aa2.jpg): area=33.0, bbox_area=33.0, bbox=[224, 354, 11, 3]
+    - Ann 1542 (image photo_6186122103615503273_y_jpg.rf.47baa6f3dd3398fae92da0ea3fdf1aa3.jpg): area=33.0, bbox_area=33.0, bbox=[283, 224, 3, 11]
+    - Ann 3153 (image photo_6186122103615503323_y_jpg.rf.a9089a6a472ceacdc9fb10ea9be0187b.jpg): area=84.0, bbox_area=84.0, bbox=[446, 30, 28, 3]
+    - Ann 3230 (image photo_6186122103615503323_y_jpg.rf.9cecb0da0e226b7f8c03c821e3fca701.jpg): area=84.0, bbox_area=84.0, bbox=[30, 166, 3, 28]
+    - Ann 3271 (image photo_6186122103615503323_y_jpg.rf.2824f13e8d53d23a49a8cba089ea4cde.jpg): area=84.0, bbox_area=84.0, bbox=[30, 446, 3, 28]
+    - Ann 7035 (image 3512_jpg.rf.08f27b5143f0cb8f64916bc435732bdf.jpg): area=85.0, bbox_area=85.0, bbox=[377, 1, 5, 17]
+    - Ann 7055 (image 3512_jpg.rf.8820bfd87ba11e9150f517cffd7b80b2.jpg): area=85.0, bbox_area=85.0, bbox=[384, 621, 5, 17]
+    - Ann 7063 (image 3512_jpg.rf.ef16cea9e8a8d4c6cf19bad0f633cb88.jpg): area=85.0, bbox_area=85.0, bbox=[258, 1, 5, 17]
+    - Ann 7070 (image 3512_jpg.rf.9cb2cd7cf24ad22757f0926561810bc6.jpg): area=85.0, bbox_area=85.0, bbox=[621, 384, 17, 5]
+    - Ann 7074 (image 3512_jpg.rf.d86f7a00b0b8abe8cadf6af0cf4933e2.jpg): area=85.0, bbox_area=85.0, bbox=[605, 384, 17, 5]
+    - Ann 7083 (image 3512_jpg.rf.2fac4022bce522c95e06aba44f36fd9d.jpg): area=85.0, bbox_area=85.0, bbox=[621, 251, 17, 5]
+    - Ann 7085 (image 3512_jpg.rf.091b040bfccb170235743ed1451a79ea.jpg): area=85.0, bbox_area=85.0, bbox=[19, 384, 17, 5]
+    - Ann 7096 (image 3512_jpg.rf.8f22196b88e7f7b2aa510675dfb15da9.jpg): area=85.0, bbox_area=85.0, bbox=[1, 377, 17, 5]
+    - Ann 7143 (image 3512_jpg.rf.fd2529bf147e378b89fdd49655dd6bae.jpg): area=85.0, bbox_area=85.0, bbox=[19, 251, 17, 5]
+
+  Disconnected Components: FAIL (24 issues)
+    - 3588_jpg.rf.92d64f2136be44240653f0623e731f69.jpg (id=634): component 3/3 has only 90px (threshold: 100px)
+    - 3588_jpg.rf.722cab7ba32993a5f1dc8387c7f6269c.jpg (id=650): component 3/3 has only 86px (threshold: 100px)
+    - 3588_jpg.rf.47228516e3276fe24cce25be62714eec.jpg (id=660): component 1/3 has only 90px (threshold: 100px)
+    - 3588_jpg.rf.b755fc5d565a1fb376fcb2ba6dd611b8.jpg (id=663): component 3/3 has only 85px (threshold: 100px)
+    - 3588_jpg.rf.808175f7b6cebf99b65965363f97d0f2.jpg (id=669): component 3/3 has only 88px (threshold: 100px)
+    - 1078-dat_png_jpg.rf.1177d70934d05eb7af2f282565601c4f.jpg (id=2006): component 1/3 has only 96px (threshold: 100px)
+    - 1078-dat_png_jpg.rf.2bbddd263f1ef7122cb37c4b29916d81.jpg (id=2020): component 3/3 has only 99px (threshold: 100px)
+    - 1078-dat_png_jpg.rf.94563b34c2f2124be920d14bec2f60f6.jpg (id=2027): component 3/3 has only 96px (threshold: 100px)
+    - 1078-dat_png_jpg.rf.4a54e7398fa84254be1c966b2525ecc6.jpg (id=2030): component 3/3 has only 93px (threshold: 100px)
+    - 1078-dat_png_jpg.rf.904ad7092304ab1da052cff41d58e65f.jpg (id=2036): component 3/3 has only 95px (threshold: 100px)
+    - 1078-dat_png_jpg.rf.79049aea696f971a8a24a736ea019c9f.jpg (id=2046): component 1/3 has only 93px (threshold: 100px)
+    - 1078-dat_png_jpg.rf.db2e42cb74f98b741dbb7f1a3bd05875.jpg (id=2054): component 1/3 has only 98px (threshold: 100px)
+    - 465-dat_png_jpg.rf.30a491b3b12f43391850f9df51b853ba.jpg (id=3287): component 1/2 has only 91px (threshold: 100px)
+    - 465-dat_png_jpg.rf.2f6428d19a02f3ff6c8064662f46022c.jpg (id=3289): component 1/2 has only 91px (threshold: 100px)
+    - 465-dat_png_jpg.rf.a7ab8073b69a3cbb732200344be9f8f4.jpg (id=3308): component 2/2 has only 91px (threshold: 100px)
+    - 3512_jpg.rf.08f27b5143f0cb8f64916bc435732bdf.jpg (id=4419): component 1/2 has only 39px (threshold: 100px)
+    - 3512_jpg.rf.8820bfd87ba11e9150f517cffd7b80b2.jpg (id=4431): component 2/2 has only 43px (threshold: 100px)
+    - 3512_jpg.rf.ef16cea9e8a8d4c6cf19bad0f633cb88.jpg (id=4434): component 1/2 has only 43px (threshold: 100px)
+    - 3512_jpg.rf.9cb2cd7cf24ad22757f0926561810bc6.jpg (id=4439): component 2/2 has only 43px (threshold: 100px)
+    - 3512_jpg.rf.d86f7a00b0b8abe8cadf6af0cf4933e2.jpg (id=4441): component 2/2 has only 43px (threshold: 100px)
+    ... and 4 more
+
+  Incorrect Label IDs: PASS
+
+  Degenerate Polygons: PASS
+
+  Multi-Polygon Annotations: PASS
+
+  Orphan Annotations: PASS
+
+  Crowd Annotations: PASS
+
+  Bbox vs JSON Area Mismatch: PASS
+
+================================================================================================
+DETAILS: CRACKS / VALID
+  Images: 201, Annotations: 372
+  Categories: {0: 'crack', 1: 'NewCracks - v2 2024-05-18 10-54pm'}
+================================================================================================
+
+  FILE INTEGRITY
+    Missing on disk: 0
+    Extra on disk (no annotation): 0
+    Corrupted/unloadable: 0
+    Non-RGB mode: 0
+
+  RESOLUTION
+    Unique sizes: 1
+      640x640: 201
+    Non-640x640: 0
+
+  CATEGORIES
+    NewCracks - v2 2024-05-18 10-54pm: 372 annotations
+    Unused: ['Category 0 (crack): defined but unused']
+
+  ANNOTATION DISTRIBUTION
+    Min per image: 1
+    Max per image: 10
+    Avg per image: 1.85
+
+  EMPTY SEGMENTATION FIELDS: 3/372
+
+  Size Mismatch: PASS
+
+  Empty Masks: PASS
+
+  Missing Classes: FAIL (1 issues)
+    - Category 0 (crack) has no annotations
+
+  Annotation Bleed: FAIL (5 issues)
+    - Ann 1 (image 1045-dat_png_jpg.rf.34b188107c05faba00682f5ca095eea7.jpg): bbox [463,144,178,496] exceeds image 640x640
+    - Ann 48 (image images228_jpg.rf.dea440749ce30f7485fdc6ace5bb5913.jpg): bbox [0,28,638,613] exceeds image 640x640
+    - Ann 56 (image images156_jpg.rf.827b73a9ce8146a1735930f616fe50c6.jpg): bbox [238,16,403,624] exceeds image 640x640
+    - Ann 97 (image crack-bdbe00b8-dc48-11ed-a5d8-88b1113a23b0_jpg.rf.06bbdfa42fa9d98f5306966a14d8b739.jpg): bbox [103,304,538,83] exceeds image 640x640
+    - Ann 305 (image image24_jpeg_jpg.rf.040826a54d2480b0759c14b4f4e15248.jpg): bbox [488,260,153,79] exceeds image 640x640
+
+  Tiny Annotations (area < 100px): PASS
+
+  Disconnected Components: FAIL (1 issues)
+    - image11_jpg.rf.d8d5955a4c6212e4da3f648bd49f64ec.jpg (id=183): component 3/8 has only 70px (threshold: 100px)
+
+  Incorrect Label IDs: PASS
+
+  Degenerate Polygons: PASS
+
+  Multi-Polygon Annotations: PASS
+
+  Orphan Annotations: PASS
+
+  Crowd Annotations: PASS
+
+  Bbox vs JSON Area Mismatch: PASS
+
+================================================================================================
+CORRUPTED DIRECTORY: drywall
+================================================================================================
+  2000x1500_76_resized_jpg.rf.b94a573f443fe31b37cdf661ae450667.jpg: OK — (640, 640), RGB
+  IMG_20220627_111718-jpg_1500x2000_jpg.rf.15a5b4a6f891a298b66e94236520550b.jpg: OK — (640, 640), RGB
+
+================================================================================================
+END OF REPORT
+================================================================================================
