@@ -205,42 +205,7 @@ There is a consistent ~18-20pp IoU gap between taping and crack segmentation acr
 
 U-Net has the fastest inference (17.84 ms) but highest GPU memory peak. SegFormer is slowest at inference but achieves the best accuracy. U-Net++ offers a middle ground.
 
-### 6.4 Classical CV Baselines
-
-For context, 6 classical computer vision methods were evaluated on 50 samples from each dataset:
-
-| Method | Cracks IoU | Cracks Dice | Drywall IoU | Drywall Dice |
-|--------|-----------|-------------|-------------|--------------|
-| Gabor filters | 0.2448 | 0.3734 | 0.0255 | 0.0468 |
-| Canny + morphology | 0.1414 | 0.2287 | 0.0236 | 0.0452 |
-| Otsu threshold | 0.1155 | 0.1896 | 0.0392 | 0.0695 |
-| Hough lines | 0.1092 | 0.1777 | 0.0610 | 0.1127 |
-| Adaptive threshold | 0.1098 | 0.1870 | 0.0359 | 0.0690 |
-| Frangi filters | 0.0748 | 0.1355 | 0.0092 | 0.0181 |
-
-**Best classical:** Gabor filters on cracks (IoU 0.2448), Hough lines on drywall (IoU 0.0610)
-
-**Deep learning improvement over best classical:**
-- Cracks: 0.5950 / 0.2448 = **2.4x** IoU improvement
-- Drywall: 0.7888 / 0.0610 = **12.9x** IoU improvement
-
-Classical methods completely fail on drywall joint segmentation, which requires understanding of spatial context that only learned features can capture.
-
-### 6.5 Feature Channel Analysis
-
-We also evaluated whether classical CV preprocessing (edge/texture filters) could serve as additional input channels to boost segmentation. Five feature extractors were scored using **Fisher's linear discriminant** (higher = better foreground/background separability):
-
-| Feature Channel | Cracks FLD | Drywall FLD | Time (ms) |
-|-----------------|-----------|-------------|-----------|
-| Multiscale LoG | 1.466 | 0.096 | 30.0 |
-| Gabor filters | 0.967 | 0.045 | 84.5 |
-| Sobel edges | 0.422 | 0.019 | 3.7 |
-| Laplacian | 0.359 | 0.023 | 4.0 |
-| Frangi filters | 0.138 | 0.007 | 1272.8 |
-
-On cracks, Multiscale LoG and Gabor show moderate discriminative power — these could potentially be concatenated as extra input channels. On drywall, all features have near-zero FLD, confirming that low-level filters cannot distinguish taping areas from background. Due to time constraints, integrating these as additional input channels was not attempted in the current experiments.
-
-### 6.6 Training Curves
+### 6.4 Training Curves
 
 All models converge within 30-40 epochs, with SegFormer showing smoother loss curves. Val Dice shows steady improvement with SegFormer reaching peak around epoch 46-48. Val mIoU tracks Dice closely; SegFormer achieves consistent lead from epoch ~15 onward.
 
