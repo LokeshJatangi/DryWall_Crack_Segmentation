@@ -1,0 +1,21 @@
+==================================================
+EVALUATION SUMMARY — segformer_b2_film_baseline_20260315_135901
+==================================================
+Checkpoint: experiments/segformer_b2_film_baseline_20260315_135901/ckpts/best_model.pt
+Architecture: SegFormer / segformer-b2
+Epoch: 48
+
+OVERALL (403 samples):
+  Dice:      0.7939    mIoU:      0.6812
+  Precision: 0.8086    Recall:    0.8350
+
+PER-PROMPT:
+  [CRACK] (201 samples)
+    Dice: 0.7174  IoU: 0.5775  Prec: 0.7480  Rec: 0.7805
+  [TAPING] (202 samples)
+    Dice: 0.8699  IoU: 0.7843  Prec: 0.8689  Rec: 0.8892
+
+FOOTPRINT:
+  Parameters: 27,677,889   Inference: 56.24 ms/img
+  GPU peak:   6085.6 MB    Checkpoint: 317 MB
+==================================================

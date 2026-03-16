@@ -31,8 +31,8 @@ RUNTIME & FOOTPRINT
   Total params:        27,677,889
   Trainable params:    27,677,889
   Val images:          403
-  Total inference:     22.88s
-  Avg per image:       56.77ms
+  Total inference:     22.56s
+  Avg per image:       55.98ms
   GPU peak memory:     6085.6 MB
 ======================================================================
 

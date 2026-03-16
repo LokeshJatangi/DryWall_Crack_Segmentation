@@ -21,7 +21,35 @@ A single model accepts an image + text prompt and produces a binary mask for:
 | 5 | U-Net++ / ResNet-34 | Dice+Focal | 0.7755 | 0.6563 | 0.7815 | 0.8304 | 26.4M |
 | 6 | **SegFormer B2 / MiT-B2** | **Dice+Focal** | **0.8041** | **0.6921** | **0.8090** | **0.8522** | **27.7M** |
 
-All models use FiLM (Feature-wise Linear Modulation) for prompt conditioning. See [docs/final_report_v2.md](docs/final_report_v2.md) for full analysis.
+All models use FiLM (Feature-wise Linear Modulation) for prompt conditioning. See [docs/final_report.md](docs/final_report.md) for full analysis.
+
+## Training Curves
+
+| Train Loss | Val Dice | Val mIoU |
+|:---:|:---:|:---:|
+| ![Train Loss](assets/report/train_loss.png) | ![Val Dice](assets/report/val_dice.png) | ![Val mIoU](assets/report/val_miou.png) |
+
+## Prediction Examples
+
+### Best Predictions — SegFormer B2 (Dice+Focal)
+
+Top predictions per prompt (4-panel: Input | Pred overlay | GT overlay | Combined).
+
+![Best Predictions](assets/report/best_predictions.png)
+
+### Failure Cases
+
+Top 10 worst predictions (sorted by IoU). 46 of the 50 worst are cracks — no consistent over/under-segmentation pattern; errors are driven by GT annotation noise. Full top-50 grids in the [report](docs/final_report.md).
+
+![Failure Cases](assets/report/failures_1.png)
+
+## Per-Prompt Metrics (Best Model)
+
+| Prompt | Dice | IoU | Precision | Recall | Samples |
+|--------|------|-----|-----------|--------|---------|
+| Crack | 0.7334 | 0.5950 | 0.7519 | 0.8044 | 201 |
+| Taping Area | 0.8744 | 0.7888 | 0.8661 | 0.8999 | 202 |
+| **Overall** | **0.8041** | **0.6921** | **0.8092** | **0.8523** | **403** |
 
 ## Quick Start
 
@@ -35,30 +63,22 @@ uv run python main.py --config src/configs/experiment.yaml
 # Train SegFormer B2
 uv run python main.py --config src/configs/segformer_experiment.yaml
 
-# Resume from checkpoint
-uv run python main.py --config src/configs/unet_resume_cosine.yaml
-
-# Evaluate a checkpoint (metrics only, no GUI)
+# Evaluate best model (metrics only, no GUI)
 uv run python src/evaluation/evaluate.py \
-  --checkpoint experiments/<run>/ckpts/best_model.pt \
-  --config <config.yaml> --save reports/eval.txt --csv reports/eval.csv
+  --checkpoint experiments/segformer_b2_film_baseline_20260315_192614/ckpts/best_model.pt \
+  --config src/configs/segformer_experiment.yaml \
+  --save reports/eval_segformer_best.txt --csv reports/eval_segformer_best.csv
 
-# Failure analysis (visual)
+# Failure analysis (visual grids + metrics)
 uv run python src/visualization/visualize_failures.py \
-  --checkpoint experiments/<run>/ckpts/best_model.pt \
-  --config <config.yaml> --no-interactive
+  --checkpoint experiments/segformer_b2_film_baseline_20260315_192614/ckpts/best_model.pt \
+  --config src/configs/segformer_experiment.yaml --no-interactive --top-n 10 --best-n 5
 
 # Visualize dataset interactively
 uv run python src/visualization/visualize_interactive.py processed_data/merged/valid/merged_valid.pkl
 ```
 
 **Visualizer Controls:** `d` next | `a` prev | `p` play/pause | `q` quit
-
-## Project Status
-
-- ✅ **Milestone 1:** Dataset preprocessing, deduplication & QA (COMPLETE)
-- ✅ **Milestone 2:** Baseline training — 3 model families + failure analysis (COMPLETE)
-- ⏳ **Milestone 3:** Zero-shot evaluation — SAM, SAM 2, FastSAM (NEXT)
 
 ## Datasets
 
@@ -112,11 +132,9 @@ docs/                                  # Final report, progress log, setup guide
 
 | Document | Description |
 |----------|-------------|
-| [Final Report](docs/final_report_v2.md) | Full methodology, 6 baselines, per-prompt metrics & analysis |
+| [Final Report](docs/final_report.md) | Full methodology, 6 baselines, per-prompt metrics & analysis |
 | [Additional Experiments](docs/additional_experiments.md) | Boundary loss, crack width augmentation experiments |
 | [Supplementary Work](docs/supplementary_work.md) | Classical CV evaluation, visualization tooling, preprocessing pipeline |
-| [Project Plan](docs/Plan_Milestone.md) | 7-milestone roadmap |
-| [Progress Log](docs/progress.md) | Session-by-session progress tracking |
 
 ## Development
 

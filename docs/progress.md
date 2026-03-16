@@ -494,7 +494,7 @@ uv run python src/visualization/visualize_dataloader.py --split train --n 16 --t
 
 | File | Description |
 |------|-------------|
-| `docs/final_report_v2.md` | New final report — 6 baselines, FiLM architecture diagram, per-prompt metrics, classical CV comparison, feature channel analysis |
+| `docs/final_report.md` | New final report — 6 baselines, FiLM architecture diagram, per-prompt metrics, classical CV comparison, feature channel analysis |
 | `docs/supplementary_work.md` | Classical CV evaluation, 7 visualization tools, failure analysis approach, preprocessing pipeline |
 | `docs/additional_experiments.md` | 5 boundary/crack_aug experiments (training complete, evaluation pending) |
 | `README.md` | Updated with current results and new documentation links |

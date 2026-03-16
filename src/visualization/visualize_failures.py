@@ -469,6 +469,92 @@ def save_failure_grid(
     print(f"Saved failure grid: {out_path}")
 
 
+# ── Static grid export (top-N best per prompt) ───────────────────────────
+def save_best_grid(
+    results: list[dict],
+    out_path: Path,
+    n_per_prompt: int = 5,
+) -> None:
+    """Save a matplotlib grid of the N best-scoring samples per prompt."""
+    import matplotlib.pyplot as plt
+
+    # Split by prompt, sort by IoU descending (best first)
+    crack_results = sorted(
+        [r for r in results if "crack" in r["prompt"]],
+        key=lambda r: r["metrics"]["iou"], reverse=True,
+    )[:n_per_prompt]
+    taping_results = sorted(
+        [r for r in results if "taping" in r["prompt"]],
+        key=lambda r: r["metrics"]["iou"], reverse=True,
+    )[:n_per_prompt]
+    selected = crack_results + taping_results
+
+    rows = len(selected)
+    fig, axes = plt.subplots(rows, 4, figsize=(20, 4 * rows))
+    if rows == 1:
+        axes = axes[np.newaxis, :]
+
+    col_titles = ["Input", "Input + Pred (green)", "Input + GT (red)", "Combined (R=GT G=Pred Y=Both)"]
+    for c, t in enumerate(col_titles):
+        axes[0, c].set_title(t, fontsize=11, fontweight="bold")
+
+    def _overlay_rgb(base, mask, color, alpha=0.45):
+        out = base.copy().astype(np.float32)
+        fg = mask > 0
+        out[fg] = alpha * np.array(color, dtype=np.float32) + (1 - alpha) * out[fg]
+        return out.clip(0, 255).astype(np.uint8)
+
+    for ri, r in enumerate(selected):
+        img = r["image_rgb"]
+        pred = r["pred_mask"]
+        gt = r["gt_mask"]
+        m = r["metrics"]
+
+        pred_on_input = _overlay_rgb(img, pred, color=(0, 255, 0))
+        gt_on_input = _overlay_rgb(img, gt, color=(255, 0, 0))
+
+        combined = img.copy().astype(np.float32)
+        gt_bool = gt > 0
+        pred_bool = pred > 0
+        gt_only = gt_bool & ~pred_bool
+        pred_only = pred_bool & ~gt_bool
+        both = gt_bool & pred_bool
+        combined[gt_only] = 0.5 * combined[gt_only] + 0.5 * np.array([255, 0, 0])
+        combined[pred_only] = 0.5 * combined[pred_only] + 0.5 * np.array([0, 255, 0])
+        combined[both] = 0.5 * combined[both] + 0.5 * np.array([255, 255, 0])
+        combined = combined.clip(0, 255).astype(np.uint8)
+
+        prompt_label = "crack" if "crack" in r["prompt"] else "taping"
+        axes[ri, 0].imshow(img)
+        axes[ri, 0].set_ylabel(
+            f"#{ri+1} [{prompt_label}]\n"
+            f"IoU={m['iou']:.3f}\nDice={m['dice']:.3f}",
+            fontsize=8, rotation=0, labelpad=80, va="center",
+        )
+        axes[ri, 0].axis("off")
+
+        axes[ri, 1].imshow(pred_on_input)
+        axes[ri, 1].axis("off")
+
+        axes[ri, 2].imshow(gt_on_input)
+        axes[ri, 2].axis("off")
+
+        axes[ri, 3].imshow(combined)
+        axes[ri, 3].set_title(
+            f"P={m['precision']:.2f} R={m['recall']:.2f}", fontsize=8
+        )
+        axes[ri, 3].axis("off")
+
+    plt.suptitle(
+        f"Best Predictions — Top {n_per_prompt} per Prompt (sorted by IoU)",
+        fontsize=14, fontweight="bold",
+    )
+    plt.tight_layout()
+    plt.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"Saved best grid: {out_path}")
+
+
 # ── Suggestions ─────────────────────────────────────────────────────────
 def build_suggestions(class_summary: dict, results: list[dict]) -> str:
     """Return formatted failure-analysis suggestions text."""
@@ -535,6 +621,8 @@ def main():
                         help="Only browse samples with IoU <= this (default: 1.0 = all)")
     parser.add_argument("--top-n", type=int, default=50,
                         help="Number of worst failures to save in grid (default: 50)")
+    parser.add_argument("--best-n", type=int, default=5,
+                        help="Number of best predictions per prompt to save in grid (default: 5)")
     parser.add_argument("--no-interactive", action="store_true",
                         help="Skip interactive browser, just print metrics and save grid")
     parser.add_argument("--out-dir", type=str, default=None,
@@ -585,6 +673,10 @@ def main():
     # Save failure grid
     grid_path = out_dir / "failure_grid.png"
     save_failure_grid(results, grid_path, n=args.top_n)
+
+    # Save best predictions grid
+    best_path = out_dir / "best_grid.png"
+    save_best_grid(results, best_path, n_per_prompt=args.best_n)
 
     # Save metrics CSV
     csv_path = out_dir / "per_sample_metrics.csv"

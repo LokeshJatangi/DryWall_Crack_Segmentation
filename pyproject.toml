@@ -20,4 +20,5 @@ dependencies = [
     "tensorboard>=2.13.0",
     "scipy>=1.10.0",
     "setuptools>=82.0.1",
+    "weasyprint>=68.1",
 ]

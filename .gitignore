@@ -68,3 +68,10 @@ Thumbs.db
 
 # Claude
 .claude/
+CLAUDE.md
+processed_data
+scripts/md_to_pdf.py
+
+# Internal docs (not for submission)
+docs/Plan_Milestone.md
+docs/assignment.md
