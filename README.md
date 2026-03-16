@@ -29,7 +29,8 @@ All models use FiLM (Feature-wise Linear Modulation) for prompt conditioning. Se
 |:---:|:---:|:---:|
 | ![Train Loss](assets/report/train_loss.png) | ![Val Dice](assets/report/val_dice.png) | ![Val mIoU](assets/report/val_miou.png) |
 
-## Prediction Examples
+<details>
+<summary><b>Prediction Examples</b> (click to expand)</summary>
 
 ### Best Predictions — SegFormer B2 (Dice+Focal)
 
@@ -42,6 +43,8 @@ Top predictions per prompt (4-panel: Input | Pred overlay | GT overlay | Combine
 Top 10 worst predictions (sorted by IoU). 46 of the 50 worst are cracks — no consistent over/under-segmentation pattern; errors are driven by GT annotation noise. Full top-50 grids in the [report](docs/final_report.md).
 
 ![Failure Cases](assets/report/failures_1.png)
+
+</details>
 
 ## Per-Prompt Metrics (Best Model)
 
