@@ -1,0 +1,25 @@
+Prompted Segmentation for Drywall QA
+Goal
+Train (or at least fine-tune) a text-conditioned segmentation model so that, given an image
+and a natural-language prompt, it produces a binary mask for:
+●​ “segment crack” (Dataset 2: Cracks)
+●​ “segment taping area” (Dataset 1: Drywall-Join-Detect)
+Datasets
+●​ Dataset 1 (Taping area):
+https://universe.roboflow.com/objectdetect-pu6rn/drywall-join-detect​
+Map to prompt: “segment taping area”, “segment joint/tape”, “segment drywall
+seam”...
+●​ Dataset 2 (Cracks): https://universe.roboflow.com/fyp-ny1jt/cracks-3ii36 ​
+Map to prompt: “segment crack”, “segment wall crack”..
+Prediction masks
+●​ PNG, single-channel, same spatial size as source image, values {0,255}.
+●​ Filenames include image id and prompt, e.g. 123__segment_crack.png.
+Report
+●​ Mention approach, model tried
+●​ Short goal summary, data split counts, metrics, 3–4 visual examples (orig | GT |
+pred), brief failure notes, runtime & footprint (train time, avg inference time/image,
+model size).
+Grading Rubric (100 pts)
+●​ Correctness (50): mIoU & Dice on both prompts.
+●​ Consistency (30): Stable across varied scenes.
+●​ Presentation (20): Clear README; seeds noted. Clear report + tables + visuals.​

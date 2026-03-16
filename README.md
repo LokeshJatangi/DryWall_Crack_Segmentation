@@ -8,17 +8,20 @@ A single model accepts an image + text prompt and produces a binary mask for:
 - **"segment crack"** — crack detection in drywall/concrete surfaces
 - **"segment taping area"** — drywall joint/taping area identification
 
-**Best result: SegFormer B2 — mIoU 0.847, Dice 0.845** on validation (403 samples).
+**Best result: SegFormer B2 (Dice+Focal) — Dice 0.8041, mIoU 0.6921** on validation (403 samples).
 
 ## Results Summary
 
-| Model | mIoU | Dice | Precision | Recall | Params | Checkpoint |
-|-------|------|------|-----------|--------|--------|------------|
-| U-Net / ResNet-34 | 0.836 | 0.831 | 0.818 | 0.845 | 24.8M | 284 MB |
-| U-Net++ / ResNet-34 | 0.831 | 0.826 | 0.820 | 0.831 | 26.4M | 303 MB |
-| **SegFormer B2 / MiT-B2** | **0.847** | **0.845** | **0.816** | **0.876** | **27.7M** | **318 MB** |
+| # | Model | Loss | Dice | mIoU | Precision | Recall | Params |
+|---|-------|------|------|------|-----------|--------|--------|
+| 1 | U-Net / ResNet-34 | Dice+BCE | 0.7670 | 0.6520 | 0.7872 | 0.8112 | 24.8M |
+| 2 | U-Net++ / ResNet-34 | Dice+BCE | 0.7705 | 0.6556 | 0.7975 | 0.8048 | 26.4M |
+| 3 | SegFormer B2 / MiT-B2 | Dice+BCE | 0.7939 | 0.6812 | 0.8087 | 0.8350 | 27.7M |
+| 4 | U-Net / ResNet-34 | Dice+Focal | 0.7760 | 0.6594 | 0.7749 | 0.8352 | 24.8M |
+| 5 | U-Net++ / ResNet-34 | Dice+Focal | 0.7755 | 0.6563 | 0.7815 | 0.8304 | 26.4M |
+| 6 | **SegFormer B2 / MiT-B2** | **Dice+Focal** | **0.8041** | **0.6921** | **0.8090** | **0.8522** | **27.7M** |
 
-All models use FiLM (Feature-wise Linear Modulation) for prompt conditioning. See [docs/final_report.md](docs/final_report.md) for full analysis.
+All models use FiLM (Feature-wise Linear Modulation) for prompt conditioning. See [docs/final_report_v2.md](docs/final_report_v2.md) for full analysis.
 
 ## Quick Start
 
@@ -35,7 +38,12 @@ uv run python main.py --config src/configs/segformer_experiment.yaml
 # Resume from checkpoint
 uv run python main.py --config src/configs/unet_resume_cosine.yaml
 
-# Failure analysis
+# Evaluate a checkpoint (metrics only, no GUI)
+uv run python src/evaluation/evaluate.py \
+  --checkpoint experiments/<run>/ckpts/best_model.pt \
+  --config <config.yaml> --save reports/eval.txt --csv reports/eval.csv
+
+# Failure analysis (visual)
 uv run python src/visualization/visualize_failures.py \
   --checkpoint experiments/<run>/ckpts/best_model.pt \
   --config <config.yaml> --no-interactive
@@ -79,6 +87,8 @@ src/
 │   ├── trainer.py                     # Training loop: AMP, early stopping, TensorBoard
 │   ├── losses.py                      # Dice, DiceBCE, Focal, Boundary, Combined
 │   └── metrics.py                     # mIoU, Dice, Precision, Recall tracker
+├── evaluation/
+│   └── evaluate.py                   # Standalone evaluation (metrics only, no GUI)
 ├── configs/                           # YAML experiment configs
 │   ├── experiment.yaml                # Default: UnetPlusPlus / resnet34
 │   └── segformer_experiment.yaml      # SegFormer B2
@@ -102,8 +112,9 @@ docs/                                  # Final report, progress log, setup guide
 
 | Document | Description |
 |----------|-------------|
-| [Final Report](docs/final_report.md) | Full methodology, results & analysis |
-| [Setup Guide](docs/setup_guide.md) | Installation, preprocessing, visualization |
+| [Final Report](docs/final_report_v2.md) | Full methodology, 6 baselines, per-prompt metrics & analysis |
+| [Additional Experiments](docs/additional_experiments.md) | Boundary loss, crack width augmentation experiments |
+| [Supplementary Work](docs/supplementary_work.md) | Classical CV evaluation, visualization tooling, preprocessing pipeline |
 | [Project Plan](docs/Plan_Milestone.md) | 7-milestone roadmap |
 | [Progress Log](docs/progress.md) | Session-by-session progress tracking |
 
