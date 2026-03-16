@@ -43,10 +43,14 @@ datasets/
 *.pkl
 *.pickle
 
-# Model outputs (checkpoints tracked via Git LFS)
+# Model outputs
 outputs/
 results/
 *.onnx
+*.pt
+*.pth
+# Keep segformer best checkpoints (tracked via Git LFS)
+!experiments/segformer_*/ckpts/best_model.pt
 
 # Environment
 .env
